@@ -1,41 +1,53 @@
 const inquirer = require('inquirer');
-const EmployeeTrackerDatabase = require('./database');
+const answer = require('./modules/answer')
 
-const employeeTrackerDatabase = new EmployeeTrackerDatabase(`mysql://root:Letmein1@localhost/employeeTracker_db`);
-
-inquirer
-    .prompt([{
-        type: 'list',
-        message: 'What would you like to do?',
-        name: 'wantToKnow',
-        choices: [
-            'view all departments',
-            'view all roles',
-            'view all employees'
-        ],
-    }, ])
-    .then((inquiringMinds) => {
-        getAnswerTo(inquiringMinds.wantToKnow)
-    });
+const letStart = () => {
+    inquirer
+        .prompt([{
+            type: 'list',
+            message: 'What would you like to do?',
+            name: 'wantToKnow',
+            choices: [
+                'view all departments',
+                'view all roles',
+                'view all employees',
+                'add a department',
+                'add a role',
+                'add an employee',
+                'update an employee role'
+            ],
+        }, ])
+        .then((inquiringMinds) => {
+            getAnswerTo(inquiringMinds.wantToKnow);
+        })
+}
 
 const getAnswerTo = (whatChaWantToDo) => {
     switch (whatChaWantToDo) {
         case 'view all departments':
-            employeeTrackerDatabase.GetAllDepartments()
-                .then((results) => console.table(results))
-                .catch((err) => console.error(err));
+            answer.viewDepartments();
             break;
         case 'view all roles':
-            employeeTrackerDatabase.GetAllRoles()
-                .then((results) => console.table(results))
-                .catch((err) => console.error(err));
+            answer.viewRoles();
             break;
         case 'view all employees':
-            employeeTrackerDatabase.GetAllEmployees()
-                .then((results) => console.table(results))
-                .catch((err) => console.error(err));
+            answer.viewEmployees();
+            break;
+        case 'add a department':
+            answer.addADepartment();
+            break;
+        case 'add a role':
+            answer.addRole();
+            break;
+        case 'add an employee':
+            answer.addEmployee();
+            break;
+        case 'update an employee role':
+            answer.updateEmployeeRole();
             break;
         default:
             break;
     }
 }
+
+letStart();
