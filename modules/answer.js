@@ -20,8 +20,8 @@ const viewEmployees = () => {
         .catch((err) => console.error(err));
 }
 
-const addADepartment = () => {
-    inquirer
+const addADepartment = async() => {
+    await inquirer
         .prompt([{
             type: 'input',
             name: 'name',
@@ -29,7 +29,7 @@ const addADepartment = () => {
         }, ])
         .then((department) => {
             if (!department.name) {
-                console.info('Department name was not enterer');
+                console.info('Department name can not be blank');
                 return;
             }
             employeeTrackerDatabase.AddDepartment(department.name)
@@ -40,8 +40,8 @@ const addADepartment = () => {
         });
 }
 
-const addRole = () => {
-    inquirer
+const addRole = async() => {
+    await inquirer
         .prompt([{
                 type: 'input',
                 name: 'role',
@@ -60,7 +60,7 @@ const addRole = () => {
         ])
         .then((roleInfo) => {
             if (!(roleInfo.role && roleInfo.department && roleInfo.salary)) {
-                console.info('Role name or department name or salary was not enterer.');
+                console.info('Role name, department name, or salary can not be blank.');
                 return;
             }
             employeeTrackerDatabase.AddRole(roleInfo.role, roleInfo.salary, roleInfo.department)
@@ -71,8 +71,8 @@ const addRole = () => {
         });
 }
 
-const addEmployee = () => {
-    inquirer
+const addEmployee = async() => {
+    await inquirer
         .prompt([{
                 type: 'input',
                 name: 'employeeFirstName',
@@ -113,8 +113,8 @@ const addEmployee = () => {
         });
 }
 
-const updateEmployeeRole = () => {
+const updateEmployeeRole = async() => {
 
 }
 
-module.exports = { viewDepartments, viewRoles, viewEmployees, addADepartment, addRole, addEmployee, updateEmployeeRole };
+module.exports = { viewDepartments, viewRoles, viewEmployees, addADepartment, addRole, addEmployee, updateEmployeeRole, employeeTrackerDatabase };

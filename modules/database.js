@@ -51,7 +51,7 @@ class EmployeeTrackerDatabase {
 
         const departmentNameQuery = `SELECT id FROM department WHERE name = ?`;
         const departmentResult = await this.ExecuteQuery(departmentNameQuery, [departmentName]);
-        if (!departmentResult) {
+        if (!departmentResult || !departmentResult.length) {
             return new Promise((resolve, reject) => {
                 throw new Error(`Department ${departmentName} does not exist.  Please add department and try again`);
             });
@@ -74,7 +74,7 @@ class EmployeeTrackerDatabase {
         if (managerFirstName && managerLastName) {
             const managerQuery = `SELECT id FROM employee WHERE first_name = ? AND last_name = ?`;
             const managerResult = await this.ExecuteQuery(managerQuery, [managerFirstName, managerLastName]);
-            if (!managerResult) {
+            if (!managerResult || !managerResult.length) {
                 return new Promise((resolve, reject) => {
                     throw new Error(`Manager with the name of ${managerFirstName} ${managerLastName} does not exist`);
                 });
@@ -85,7 +85,7 @@ class EmployeeTrackerDatabase {
 
         const roleQuery = `SELECT id FROM role WHERE title = ?`;
         const roleResult = await this.ExecuteQuery(roleQuery, [roleName]);
-        if (!roleResult) {
+        if (!roleResult || !roleResult.length) {
             return new Promise((resolve, reject) => {
                 throw new Error(`Role ${roleName} does not exist.  Please add Role and try again`);
             });

@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const answer = require('./modules/answer')
 
-const letStart = () => {
+const questions = () => {
     inquirer
         .prompt([{
             type: 'list',
@@ -22,7 +22,7 @@ const letStart = () => {
         })
 }
 
-const getAnswerTo = (whatChaWantToDo) => {
+const getAnswerTo = async(whatChaWantToDo) => {
     switch (whatChaWantToDo) {
         case 'view all departments':
             answer.viewDepartments();
@@ -40,7 +40,7 @@ const getAnswerTo = (whatChaWantToDo) => {
             answer.addRole();
             break;
         case 'add an employee':
-            answer.addEmployee();
+            await answer.addEmployee();
             break;
         case 'update an employee role':
             answer.updateEmployeeRole();
@@ -50,4 +50,4 @@ const getAnswerTo = (whatChaWantToDo) => {
     }
 }
 
-letStart();
+questions();
