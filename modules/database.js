@@ -28,9 +28,8 @@ class EmployeeTrackerDatabase {
     }
 
     async AddDepartment(departmentName) {
-        const query = `SELECT COUNT(id) as count FROM department WHERE name = ?`
-        const result = await this.ExecuteQuery(query, [departmentName]);
-        if (result[0].count) {
+        const result = await this.GetDepartmentByName(departmentName);
+        if (result && result.length) {
             return new Promise((resolve, reject) => {
                 throw new Error(`Department ${departmentName} is already exist`);
             });
@@ -41,39 +40,35 @@ class EmployeeTrackerDatabase {
     }
 
     async AddRole(roleName, salary, departmentName) {
-        const roleNameQuery = `SELECT COUNT(id) as count FROM role WHERE title = ?`;
-        const roleResult = await this.ExecuteQuery(roleNameQuery, [roleName]);
-        if (roleResult[0].count) {
+        const roleResult = await this.GetRoleByTitle(roleName);
+        if (roleResult && roleResult.length) {
             return new Promise((resolve, reject) => {
                 throw new Error(`Role ${roleName} is already exist`);
             });
         }
 
-        const departmentNameQuery = `SELECT id FROM department WHERE name = ?`;
-        const departmentResult = await this.ExecuteQuery(departmentNameQuery, [departmentName]);
+        const departmentResult = await this.GetDepartmentByName(departmentName);
         if (!departmentResult || !departmentResult.length) {
             return new Promise((resolve, reject) => {
-                throw new Error(`Department ${departmentName} does not exist.  Please add department and try again`);
+                throw new Error(`Department ${departmentName} does not exist. Please add department and try again`);
             });
-        } else {
-            const queryString = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
-            return this.ExecuteQuery(queryString, [roleName, salary, departmentResult[0].id]);
         }
+
+        const queryString = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
+        return this.ExecuteQuery(queryString, [roleName, salary, departmentResult[0].id]);
     }
 
     async AddEmployee(employeeFirstName, employeeLastName, roleName, managerFirstName, managerLastName) {
-        const employeeQuery = `SELECT COUNT(id) as count FROM employee WHERE first_name = ? AND last_name = ?`;
-        const employeeResult = await this.ExecuteQuery(employeeQuery, [employeeFirstName, employeeLastName]);
-        if (employeeResult[0].count) {
+        const employeeResult = await this.GetEmployeeByFirstNameAndLastName(employeeFirstName, employeeLastName);
+        if (employeeResult && employeeResult.length) {
             return new Promise((resolve, reject) => {
                 throw new Error(`Employee with the name of ${employeeFirstName} ${employeeLastName} is already exist`);
             });
         }
 
-        let managerId = null;
+        let managerId;
         if (managerFirstName && managerLastName) {
-            const managerQuery = `SELECT id FROM employee WHERE first_name = ? AND last_name = ?`;
-            const managerResult = await this.ExecuteQuery(managerQuery, [managerFirstName, managerLastName]);
+            const managerResult = await this.GetEmployeeByFirstNameAndLastName(managerFirstName, managerLastName);
             if (!managerResult || !managerResult.length) {
                 return new Promise((resolve, reject) => {
                     throw new Error(`Manager with the name of ${managerFirstName} ${managerLastName} does not exist`);
@@ -83,8 +78,7 @@ class EmployeeTrackerDatabase {
             }
         }
 
-        const roleQuery = `SELECT id FROM role WHERE title = ?`;
-        const roleResult = await this.ExecuteQuery(roleQuery, [roleName]);
+        const roleResult = await this.GetRoleByTitle(roleName);
         if (!roleResult || !roleResult.length) {
             return new Promise((resolve, reject) => {
                 throw new Error(`Role ${roleName} does not exist.  Please add Role and try again`);
@@ -101,6 +95,21 @@ class EmployeeTrackerDatabase {
                 return this.ExecuteQuery(queryString, [employeeFirstName, employeeLastName, roleResult[0].id]);
             }
         }
+    }
+
+    GetEmployeeByFirstNameAndLastName(firstName, lastName) {
+        const query = `SELECT * FROM employee WHERE first_name = ? AND last_name = ?`
+        return this.ExecuteQuery(query, [firstName, lastName]);
+    }
+
+    GetRoleByTitle(title) {
+        const query = `SELECT * FROM role WHERE title = ?`
+        return this.ExecuteQuery(query, [title]);
+    }
+
+    GetDepartmentByName(departmentName) {
+        const query = `SELECT * FROM department WHERE name = ?`
+        return this.ExecuteQuery(query, [departmentName]);
     }
 
     ExecuteQuery(queryString, params) {
