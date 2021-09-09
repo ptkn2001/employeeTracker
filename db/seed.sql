@@ -13,11 +13,11 @@ VALUES ("Engineering Manager", 200000.00, 1),
        ("Marketing Associate", 250000.00, 3);
        
 
-INSERT INTO employee (first_name, last_name, role_id)
-VALUES ("Jane", "Smith", 1),
-       ("John", "Doe", 2),
-       ("Bill", "Moe", 3),
-       ("John", "Wang", 4),
-       ("Peter", "Pan", 5),
-       ("Mickey", "Mouse", 6),
-       ("Snow", "White", 7);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Jane", "Smith", 1, NULL),
+       ("John", "Doe", 2, 1),
+       ("Bill", "Moe", 3, 1),
+       ("John", "Wang", 4, NULL),
+       ("Peter", "Pan", 5, 4),
+       ("Mickey", "Mouse", 6, NULL),
+       ("Snow", "White", 7, 6);
