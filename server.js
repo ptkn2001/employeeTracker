@@ -1,3 +1,7 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//This is the entry point of the program.  It asks a series of questions and then pass the info
+//to the answer.js module to process.
+/////////////////////////////////////////////////////////////////////////////////////////////////
 const inquirer = require('inquirer');
 const answer = require('./modules/answer')
 
@@ -14,7 +18,8 @@ const questions = () => {
                 'add a department',
                 'add a role',
                 'add an employee',
-                'update an employee role'
+                'update an employee role',
+                'quit'
             ],
         }, ])
         .then((inquiringMinds) => {
@@ -22,7 +27,7 @@ const questions = () => {
         })
 }
 
-const getAnswerTo = async(whatChaWantToDo) => {
+const getAnswerTo = (whatChaWantToDo) => {
     switch (whatChaWantToDo) {
         case 'view all departments':
             answer.viewDepartments();
@@ -40,10 +45,14 @@ const getAnswerTo = async(whatChaWantToDo) => {
             answer.addRole();
             break;
         case 'add an employee':
-            await answer.addEmployee();
+            answer.addEmployee();
             break;
         case 'update an employee role':
             answer.updateEmployeeRole();
+            break;
+        case 'quit':
+            //Destroy the sql connection and end the program.
+            answer.employeeTrackerDatabase.db.destroy();
             break;
         default:
             break;
