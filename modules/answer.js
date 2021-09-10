@@ -130,7 +130,7 @@ const updateEmployeeRole = async() => {
     const query = `SELECT e.first_name, e.last_name, r.title FROM employee e JOIN role r on e.role_id = r.id`
     const results = await employeeTrackerDatabase.ExecuteQuery(query, []);
 
-    //Then convert to an array that we can use to for users to select to be updated using inquire list.
+    //Then convert to an array that we can use in the inquirer list below.
     const employees = results.map((employee) => {
         return `${employee.first_name} ${employee.last_name}: ${employee.title}`;
     })
