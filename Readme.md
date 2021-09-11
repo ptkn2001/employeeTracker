@@ -60,8 +60,6 @@ Assuming that node.js and MySql is installed and configured.
 3. Make sure that you replace PASSWORD with the password of your MySql root account in the connection string in the answer.js module in the modules folder
 4. Execute the command `npm start` from your terminal window
 
-[![How To Run]()]({https://github.com/ptkn2001/employeeTracker/tree/master/assets/HowTo.wmv} "How To Run")
-
 ## Questions
 
 My Github Profile: [ptkn2001](https://github.com/ptkn2001)
