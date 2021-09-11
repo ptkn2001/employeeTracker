@@ -5,25 +5,25 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 const inquirer = require('inquirer');
 const EmployeeTrackerDatabase = require('./database');
-const employeeTrackerDatabase = new EmployeeTrackerDatabase(`mysql://<USERNAME>:<PASSWORD>@localhost/employeeTracker_db`);
+const employeeTrackerDatabase = new EmployeeTrackerDatabase(`mysql://root:Letmein1@localhost/employeeTracker_db`);
 
 ///This method gets all department records and print the results.
-const viewDepartments = () => {
-    employeeTrackerDatabase.GetAllDepartments()
+const viewDepartments = async() => {
+    await employeeTrackerDatabase.GetAllDepartments()
         .then((results) => console.table(results))
         .catch((err) => console.error(err));
 }
 
 ///This method gets all the role records and print the results.
-const viewRoles = () => {
-    employeeTrackerDatabase.GetAllRoles()
+const viewRoles = async() => {
+    await employeeTrackerDatabase.GetAllRoles()
         .then((results) => console.table(results))
         .catch((err) => console.error(err));
 }
 
 ///This method gets all the employee records and print the results.
-const viewEmployees = () => {
-    employeeTrackerDatabase.GetAllEmployees()
+const viewEmployees = async() => {
+    await employeeTrackerDatabase.GetAllEmployees()
         .then((results) => console.table(results))
         .catch((err) => console.error(err));
 }
@@ -36,12 +36,12 @@ const addADepartment = async() => {
             name: 'name',
             message: 'Enter the name of the department',
         }, ])
-        .then((department) => {
+        .then(async(department) => {
             if (!department.name) {
                 console.info('Department name can not be blank');
                 return;
             }
-            employeeTrackerDatabase.AddDepartment(department.name)
+            await employeeTrackerDatabase.AddDepartment(department.name)
                 .then((results) => {
                     console.log(`Department ${department.name} added successfully`)
                 })
@@ -68,12 +68,12 @@ const addRole = async() => {
                 message: 'Enter the salary for the role',
             },
         ])
-        .then((roleInfo) => {
+        .then(async(roleInfo) => {
             if (!(roleInfo.role && roleInfo.department && roleInfo.salary)) {
                 console.info('Role name, department name, or salary can not be blank.');
                 return;
             }
-            employeeTrackerDatabase.AddRole(roleInfo.role, roleInfo.salary, roleInfo.department)
+            await employeeTrackerDatabase.AddRole(roleInfo.role, roleInfo.salary, roleInfo.department)
                 .then((results) => {
                     console.log(`Role ${roleInfo.role} added successfully`)
                 })
@@ -110,12 +110,12 @@ const addEmployee = async() => {
                 message: 'Enter manager last name. Leave blank if no manager.',
             },
         ])
-        .then((employeeInfo) => {
+        .then(async(employeeInfo) => {
             if (!(employeeInfo.employeeFirstName && employeeInfo.employeeLastName && employeeInfo.role)) {
                 console.info(`Employee first name, last name, or role can not be blank`);
                 return;
             }
-            employeeTrackerDatabase.AddEmployee(employeeInfo.employeeFirstName, employeeInfo.employeeLastName,
+            await employeeTrackerDatabase.AddEmployee(employeeInfo.employeeFirstName, employeeInfo.employeeLastName,
                     employeeInfo.role, employeeInfo.managerFirstName, employeeInfo.managerLastName)
                 .then((results) => {
                     console.log(`Employee ${employeeInfo.employeeFirstName} ${employeeInfo.employeeLastName} added successfully`)
@@ -135,7 +135,7 @@ const updateEmployeeRole = async() => {
         return `${employee.first_name} ${employee.last_name}: ${employee.title}`;
     })
 
-    inquirer
+    await inquirer
         .prompt([{
                 type: 'list',
                 message: 'Select an employee to update role for',
@@ -148,7 +148,7 @@ const updateEmployeeRole = async() => {
                 message: 'Enter new role title',
             },
         ])
-        .then((employeeRoleInfo) => {
+        .then(async(employeeRoleInfo) => {
             if (!(employeeRoleInfo.roleName)) {
                 console.info('Role name can not be blank.');
                 return;
@@ -159,7 +159,7 @@ const updateEmployeeRole = async() => {
             const employeeFirstNameLastName = employeeName[0].split(' ');
 
             //We call the UpdateEmployeeRole method in the database.js module to update the employee with new role.
-            employeeTrackerDatabase.UpdateEmployeeRole(employeeFirstNameLastName[0], employeeFirstNameLastName[1], employeeRoleInfo.roleName)
+            await employeeTrackerDatabase.UpdateEmployeeRole(employeeFirstNameLastName[0], employeeFirstNameLastName[1], employeeRoleInfo.roleName)
                 .then((results) => {
                     console.log(`Employee ${employeeRoleInfo.employeeName} now has a new ${employeeRoleInfo.roleName} role`)
                 })

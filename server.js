@@ -5,8 +5,8 @@
 const inquirer = require('inquirer');
 const answer = require('./modules/answer')
 
-const questions = () => {
-    inquirer
+const questions = async() => {
+    await inquirer
         .prompt([{
             type: 'list',
             message: 'What would you like to do?',
@@ -18,45 +18,61 @@ const questions = () => {
                 'add a department',
                 'add a role',
                 'add an employee',
-                'update an employee role',
-                'quit'
+                'update an employee role'
             ],
         }, ])
-        .then((inquiringMinds) => {
-            getAnswerTo(inquiringMinds.wantToKnow);
+        .then(async(inquiringMinds) => {
+            await getAnswerTo(inquiringMinds.wantToKnow);
+            wrapUp();
         })
 }
 
-const getAnswerTo = (whatChaWantToDo) => {
+const getAnswerTo = async(whatChaWantToDo) => {
     switch (whatChaWantToDo) {
         case 'view all departments':
-            answer.viewDepartments();
+            await answer.viewDepartments();
             break;
         case 'view all roles':
-            answer.viewRoles();
+            await answer.viewRoles();
             break;
         case 'view all employees':
-            answer.viewEmployees();
+            await answer.viewEmployees();
             break;
         case 'add a department':
-            answer.addADepartment();
+            await answer.addADepartment();
             break;
         case 'add a role':
-            answer.addRole();
+            await answer.addRole();
             break;
         case 'add an employee':
-            answer.addEmployee();
+            await answer.addEmployee();
             break;
         case 'update an employee role':
-            answer.updateEmployeeRole();
-            break;
-        case 'quit':
-            //Destroy the sql connection and end the program.
-            answer.employeeTrackerDatabase.db.destroy();
+            await answer.updateEmployeeRole();
             break;
         default:
             break;
     }
+}
+
+const wrapUp = async() => {
+    inquirer
+        .prompt([{
+            type: 'list',
+            message: 'Do you want to continue?',
+            name: 'userResponse',
+            choices: [
+                'yes',
+                'no'
+            ],
+        }, ])
+        .then(async(response) => {
+            if (response.userResponse == 'yes') {
+                questions();
+            } else {
+                answer.employeeTrackerDatabase.db.destroy();
+            }
+        })
 }
 
 questions();
