@@ -27,7 +27,8 @@ This tool presents a list of the following actions that the users can choose.
 - add a role
 - add an employee
 - update an employee role
-  The tool then can either print the results to the console or asking additional questions and perform the action based on what the user selected.
+
+The tool then can either print the results to the console or asking additional questions and perform the action based on what the user selected.
 
 ## Installation
 
