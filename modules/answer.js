@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 const inquirer = require('inquirer');
 const EmployeeTrackerDatabase = require('./database');
-const employeeTrackerDatabase = new EmployeeTrackerDatabase(`mysql://root:Letmein1@localhost/employeeTracker_db`);
+const employeeTrackerDatabase = new EmployeeTrackerDatabase(`mysql://root:<PASSWORD>@localhost/employeeTracker_db`);
 
 ///This method gets all department records and print the results.
 const viewDepartments = async() => {
